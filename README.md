@@ -11,29 +11,24 @@ Built along the lines of [cv-boilerplate](https://github.com/mrzool/cv-boilerpla
 The invoice content lives in `details.yml` and it's structured like so:
 
 ```YAML
-invoice-nr: 2015-11-04
-author: Max Mustermann
-city: Musterstadt
-from:
-- Musterstraße 37
-- 12345 Musterstadt
+invoice-nr: nr 1
+payment-due: 22.08.2022
+
 to:
-- Erika Mustermann
-- Musterallee 1
-- 12345 Musterstadt
-- Germany
-VAT: 20
+  company-name: Company Name
+  company-code: reg. kood 
+
 service:
-- description: The first service provided
-  price: 450.00
-- description: And another one, with a list of details
-  price: 245.00
-  details:
-    - Some more detailed explanation
-    - of the service provided
-    - Looking good
-- description: The last service provided
-  price: 245.00
+- description: Name of service 1
+  hours: 1 x 3,5 tundi 
+  price: 25
+  total: 87.50
+- description: Name of service 2
+  total: 180.00
+- description: Name of service 3
+  hours: 4 x 6 tundi
+  price: 25
+  total: 600
 ```
 
 When running `make`, [Pandoc](http://pandoc.org/) starts iterating on the YAML file, populates `template.tex` with your data, and pipes the result to XeTeX. XeTeX deals with the typesetting and compiles a PDF ready to be printed/faxed/emailed and archived (see the [output](output.pdf)).

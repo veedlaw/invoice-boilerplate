@@ -66,7 +66,7 @@ $endif$
 %--------------------------------
 $if(lang)$
 \usepackage{polyglossia}
-\setmainlanguage{$polyglossia-lang.name$}
+\setmainlanguage{$lang$}
 $endif$
 
 % PDF SETUP
@@ -92,66 +92,67 @@ $endif$
 % DOCUMENT
 %--------------------------------
 \begin{document}
-\small
-\textsc{\textbf{$author$}}
-$for(from)$
-\textbullet{} \textsc{$from$}
-$endfor$
+% \small
 
-\vspace{1em}
+{\Huge {\textbf{$company-name$}}}
 
-\normalsize \sffamily
-$for(to)$
-$to$\\
-$endfor$
+\vspace{5mm}
+\small \sffamily
 
-\vspace{6em}
+\newlength\q
+\setlength\q{\dimexpr .5\textwidth -2\tabcolsep}
+\noindent\begin{tabular}{|p{\q}|p{\q}|}
+\hline
 
-\begin{flushright}
-  \small
-  $city$, \today
-\end{flushright}
+	Kellele:\quad $to.company-name$ & Arve nr: \today / nr2 \\
+	\qquad \qquad \!  $to.company-code$ & Arve kuupäev: \today \\
+	& Tasumise tähtaeg: $payment-due$ \\
+	& Esindaja: $representative$ \\
 
-\vspace{1em}
+\hline
+\end{tabular}
 
 
-\section*{\textsc{Invoice} \textsc{\#$invoice-nr$}}
-\footnotesize
+
+%\footnotesize
 \newcounter{pos}
 \setcounter{pos}{0}
 \STautoround*{2} % Get spreadtab to always display the decimal part
 $if(commasep)$\STsetdecimalsep{,}$endif$ % Use comma as decimal separator
 
-\begin{spreadtab}{{tabular}[t t t]{lp{8.2cm}r}}
-  \hdashline[1pt/1pt]
-  @ \noalign{\vskip 2mm} \textbf{Pos.} & @ \textbf{Description} & @ \textbf{Prices in $currency$} \\ \hline
-      $for(service)$ @ \noalign{\vskip 2mm} \refstepcounter{pos} \thepos 
-        & @ $service.description$ 
-        $if(service.details)$\newline \begin{itemize} 
-          $for(service.details)$\scriptsize \item $service.details$ 
-          $endfor$ \end{itemize}
-          $endif$ & $service.price$\\$endfor$ \noalign{\vskip 2mm} \hline
-  $if(VAT)$
-    @ & @ \multicolumn{1}{r}{Subtotal:}                & :={sum(c1:[0,-1])} \\ \hhline{~~-}
-    @ & @ \multicolumn{1}{r}{VAT $VAT$\%:}               & $VAT$/100*[0,-1] \\ \hhline{~~-}
-  $endif$
-  @ & @ \multicolumn{1}{r}{\textbf{Total:}}   & \textbf{:={$if(VAT)$[0,-1]+[0,-2]$else$sum(c1:[0,-1])$endif$}} \\ \hhline{~~-}
+
+\setlength\q{\dimexpr .28\textwidth -2\tabcolsep}
+\begin{spreadtab}{{tabular}{p{\q} p{\q} c r}}
+\hline
+@\textbf{Töö kirjeldus} & @\textbf{Töö sisu} & @\textbf{Hind} & @\textbf{Tasumisele kuuluv summa} \\ 
+\hline
+	$for(service)$ @ $service.description$ & @ $service.hours$ & @ $service.price$ 
+	& :={$service.total$} € \\ $endfor$
+	\hline
+$if(VAT)$
+  @ & @ \multicolumn{2}{r}{Subtotal:}                & :={sum(c1:[0,-1])} \\ \hhline{~~-}
+  @ & @ \multicolumn{2}{r}{VAT $VAT$\%:}               & $VAT$/100*[0,-1] \\ \hhline{~~-}
+$endif$
+@ & @ \multicolumn{2}{r}{\textbf{Total:}}   & \textbf{:={$if(VAT)$[0,-1]+[0,-2]$else$sum(c1:[0,-1])$endif$}} \\ \hhline{~~-}
 \end{spreadtab}
 
 
+%\usepackage{lipsum}
+\begin{table*}[b]
+%\footnotesize
+
+\setlength\q{\dimexpr .33\textwidth -2\tabcolsep}
+\noindent\begin{tabular}{ l c r }
+\hline
+	$company-name$ 		& $phone-nr$ 	 & Pank $company-bank-name$ \\
+	$company-address.street$ & reg.kood $company-code$ & IBAN: $company-bank-IBAN$ \\
+	$company-address.post-code$ $company-address.city$, $company-address.country$ & & KMKR nr: $VAT-info$
+
+
+\end{tabular}
+\end{table*}
+
 \vspace{15mm}
 
-\sffamily
-\small
-$closingnote$
-
 \medskip
-
-\IfFileExists{signature.pdf}
-{
-      \includegraphics[height=3.5\baselineskip]{signature.pdf} \par
-}
-
-$author$
-
 \end{document}
